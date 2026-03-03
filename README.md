@@ -92,7 +92,15 @@ curl http://localhost:3000/healthz
 MCP endpoint:
 
 - `POST /mcp`
+- `GET /mcp` (SSE stream)
+- `DELETE /mcp` (close session if stateful)
 - Include `Authorization: Bearer <MCP_AUTH_TOKEN>` if auth is enabled.
+ 
+Alternate SSE endpoint for clients that expect `/sse`:
+
+- `POST /sse`
+- `GET /sse` (SSE stream)
+- `DELETE /sse` (close session if stateful)
 
 ## Example MCP client config (stdio)
 

@@ -63,7 +63,7 @@ if ((host === "0.0.0.0" || host === "::") && !allowedHosts?.length) {
 const config = loadConfig();
 const app = createMcpExpressApp({ host, allowedHosts });
 
-app.use("/mcp", (req, res, next) => {
+app.use(["/mcp", "/sse"], (req, res, next) => {
   if (allowedOrigins?.length) {
     const origin = req.header("origin");
     if (origin && !allowedOrigins.includes(origin)) {
@@ -124,7 +124,7 @@ app.get("/healthz", (_req: Request, res: Response) => {
   res.status(200).json({ ok: true, service: "prt-mcp" });
 });
 
-app.post("/mcp", async (req: Request, res: Response) => {
+async function handleMcpRequest(req: Request, res: Response): Promise<void> {
   const server = createPrtServer(new PrtClient(config));
 
   try {
@@ -152,29 +152,16 @@ app.post("/mcp", async (req: Request, res: Response) => {
       });
     }
   }
-});
+}
 
-app.get("/mcp", (_req: Request, res: Response) => {
-  res.status(405).json({
-    jsonrpc: "2.0",
-    error: {
-      code: -32000,
-      message: "Method not allowed.",
-    },
-    id: null,
-  });
-});
+app.post("/mcp", handleMcpRequest);
+app.get("/mcp", handleMcpRequest);
+app.delete("/mcp", handleMcpRequest);
 
-app.delete("/mcp", (_req: Request, res: Response) => {
-  res.status(405).json({
-    jsonrpc: "2.0",
-    error: {
-      code: -32000,
-      message: "Method not allowed.",
-    },
-    id: null,
-  });
-});
+app.post("/sse", handleMcpRequest);
+app.get("/sse", handleMcpRequest);
+app.delete("/sse", handleMcpRequest);
+
 
 app.listen(port, host, () => {
   console.error(`PRT MCP HTTP server listening on http://${host}:${port}/mcp`);
