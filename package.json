@@ -1,0 +1,29 @@
+{
+  "name": "prt-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MCP server for Pittsburgh Regional Transit TrueTime and related transit data",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "prt-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "dev:http": "tsx src/http.ts",
+    "start": "node dist/index.js",
+    "start:http": "node dist/http.js",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
